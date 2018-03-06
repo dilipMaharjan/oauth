@@ -36,11 +36,18 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'rest_framework',
-    'oauth2_provider',
-    'social_django',
-    'rest_framework_social_oauth2',
-]
+    # 'oauth2_provider',
+    # 'social_django',
+    # 'rest_framework_social_oauth2',
+    # The following apps are required:
+    'django.contrib.sites',
 
+    'allauth',
+    'allauth.account',
+    'allauth.socialaccount',
+    'allauth.socialaccount.providers.github',
+]
+SITE_ID = 1
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -52,11 +59,10 @@ MIDDLEWARE = [
 ]
 
 ROOT_URLCONF = 'django_oauth_two.urls'
-
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [os.path.join(BASE_DIR, 'templates')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -65,23 +71,31 @@ TEMPLATES = [
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
 
-                'social_django.context_processors.backends',
-                'social_django.context_processors.login_redirect',
+                # 'social_django.context_processors.backends',
+                # 'social_django.context_processors.login_redirect',
             ],
         },
     },
 ]
 
-REST_FRAMEWORK = {
-    'DEFAULT_AUTHENTICATION_CLASSES': (
-        'oauth2_provider.contrib.rest_framework.OAuth2Authentication',
-        'rest_framework_social_oauth2.authentication.SocialAuthentication',
-    ),
-}
-
+# REST_FRAMEWORK = {
+#     'DEFAULT_AUTHENTICATION_CLASSES': (
+#         'oauth2_provider.contrib.rest_framework.OAuth2Authentication',
+#         'rest_framework_social_oauth2.authentication.SocialAuthentication',
+#     ),
+# }
+#
+# AUTHENTICATION_BACKENDS = (
+#     'rest_framework_social_oauth2.backends.DjangoOAuth2',
+#     'django.contrib.auth.backends.ModelBackend',
+# )
 AUTHENTICATION_BACKENDS = (
-    'rest_framework_social_oauth2.backends.DjangoOAuth2',
+    # Needed to login by username in Django admin, regardless of `allauth`
     'django.contrib.auth.backends.ModelBackend',
+    'django.contrib.auth.backends.ModelBackend',
+
+    # `allauth` specific authentication methods, such as login by e-mail
+    'allauth.account.auth_backends.AuthenticationBackend',
 )
 
 WSGI_APPLICATION = 'django_oauth_two.wsgi.application'
